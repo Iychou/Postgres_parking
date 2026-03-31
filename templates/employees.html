@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="hero-panel mb-4 compact">
+	<div class="hero-copy">
+		<span class="eyebrow">Employees center</span>
+		<h1>Vision complete de l'equipe et de sa productivite.</h1>
+		<p>Les salaires, les roles et la charge tickets sont rassembles sur une meme page.</p>
+	</div>
+	<div class="hero-badge wide">
+		<span>Top salaire</span>
+		<strong>{{ top_employee.name if top_employee else "N/A" }}</strong>
+		<small>${{ top_employee.salary if top_employee else 0 }}</small>
+	</div>
+</section>
+
+<section class="stats-grid mb-4">
+	<article class="metric-card accent-blue">
+		<div class="metric-icon"><i class="fas fa-id-badge"></i></div>
+		<div>
+			<p>Employes actifs</p>
+			<h3>{{ overview.employees_count or 0 }}</h3>
+			<span>{{ overview.roles_count or 0 }} roles</span>
+		</div>
+	</article>
+	<article class="metric-card accent-gold">
+		<div class="metric-icon"><i class="fas fa-coins"></i></div>
+		<div>
+			<p>Salaire moyen</p>
+			<h3>${{ overview.average_salary or 0 }}</h3>
+			<span>Total: ${{ overview.total_salary or 0 }}</span>
+		</div>
+	</article>
+</section>
+
+<section class="panel-card">
+	<div class="section-heading">
+		<div>
+			<span class="eyebrow">People data</span>
+			<h2>Liste des employes</h2>
+		</div>
+	</div>
+	<div class="table-shell">
+		<table class="table table-modern align-middle mb-0">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Role</th>
+					<th>Salary</th>
+					<th>Tickets</th>
+					<th>Open</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for employee in employees %}
+				<tr>
+					<td>{{ employee.id }}</td>
+					<td>
+						<div class="name-cell">
+							<strong>{{ employee.name }}</strong>
+							<span>Employee record</span>
+						</div>
+					</td>
+					<td>{{ employee.role }}</td>
+					<td>${{ employee.salary }}</td>
+					<td>{{ employee.ticket_count or 0 }}</td>
+					<td>{{ employee.open_ticket_count or 0 }}</td>
+				</tr>
+				{% else %}
+				<tr>
+					<td colspan="6" class="empty-cell">Aucun employe a afficher.</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>
+{% endblock %}

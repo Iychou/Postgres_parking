@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="hero-panel mb-4">
+	<div class="hero-copy">
+		<span class="eyebrow">Oracle ERP Overview</span>
+		<h1>Suivi centralise des employes, tickets et performances.</h1>
+		<p>
+			Un tableau de bord plus riche pour voir rapidement la taille de l'equipe, la charge
+			de travail et les indicateurs salariaux.
+		</p>
+	</div>
+	<div class="hero-badge">
+		<span>Tickets ouverts</span>
+		<strong>{{ ticket_stats.open_tickets or 0 }}</strong>
+	</div>
+</section>
+
+<section class="stats-grid mb-4">
+	<article class="metric-card accent-blue">
+		<div class="metric-icon"><i class="fas fa-users"></i></div>
+		<div>
+			<p>Employes</p>
+			<h3>{{ overview.employees_count or 0 }}</h3>
+			<span>{{ overview.roles_count or 0 }} roles differents</span>
+		</div>
+	</article>
+	<article class="metric-card accent-red">
+		<div class="metric-icon"><i class="fas fa-ticket-alt"></i></div>
+		<div>
+			<p>Total tickets</p>
+			<h3>{{ ticket_stats.tickets_count or 0 }}</h3>
+			<span>{{ ticket_stats.closed_tickets or 0 }} fermes</span>
+		</div>
+	</article>
+	<article class="metric-card accent-gold">
+		<div class="metric-icon"><i class="fas fa-wallet"></i></div>
+		<div>
+			<p>Masse salariale</p>
+			<h3>${{ overview.total_salary or 0 }}</h3>
+			<span>Moyenne: ${{ overview.average_salary or 0 }}</span>
+		</div>
+	</article>
+	<article class="metric-card accent-teal">
+		<div class="metric-icon"><i class="fas fa-bolt"></i></div>
+		<div>
+			<p>Salaire max</p>
+			<h3>${{ overview.max_salary or 0 }}</h3>
+			<span>Vue rapide des priorites</span>
+		</div>
+	</article>
+</section>
+
+<section class="content-grid">
+	<div class="panel-card">
+		<div class="section-heading">
+			<div>
+				<span class="eyebrow">Repartition</span>
+				<h2>Roles de l'equipe</h2>
+			</div>
+		</div>
+		<div class="data-list">
+			{% for role in role_breakdown %}
+			<div class="data-row">
+				<div>
+					<strong>{{ role.role }}</strong>
+					<span>{{ role.employee_count }} employe(s)</span>
+				</div>
+				<div class="text-end">
+					<strong>${{ role.average_salary }}</strong>
+					<span>Salaire moyen</span>
+				</div>
+			</div>
+			{% else %}
+			<p class="empty-state">Aucune donnee disponible pour les roles.</p>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="panel-card">
+		<div class="section-heading">
+			<div>
+				<span class="eyebrow">Charge de travail</span>
+				<h2>Performance par employe</h2>
+			</div>
+		</div>
+		<div class="table-shell">
+			<table class="table table-modern align-middle mb-0">
+				<thead>
+					<tr>
+						<th>Employe</th>
+						<th>Role</th>
+						<th>Tickets</th>
+						<th>Ouverts</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for member in team_workload %}
+					<tr>
+						<td>{{ member.name }}</td>
+						<td>{{ member.role }}</td>
+						<td>{{ member.ticket_count or 0 }}</td>
+						<td>{{ member.open_ticket_count or 0 }}</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="4" class="empty-cell">Aucun employe a afficher.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
+
+<section class="panel-card mt-4">
+	<div class="section-heading">
+		<div>
+			<span class="eyebrow">Dernieres activites</span>
+			<h2>Tickets recents</h2>
+		</div>
+	</div>
+	<div class="ticket-strip">
+		{% for ticket in recent_tickets %}
+		<article class="ticket-card">
+			<div class="ticket-top">
+				<span class="ticket-id">#{{ ticket.id }}</span>
+				<span class="status-pill {{ 'status-open' if ticket.status|upper == 'OPEN' else 'status-closed' }}">
+					{{ ticket.status }}
+				</span>
+			</div>
+			<h3>{{ ticket.title }}</h3>
+			<p>{{ ticket.employee_name or "Non assigne" }}</p>
+		</article>
+		{% else %}
+		<p class="empty-state">Aucun ticket recent a afficher.</p>
+		{% endfor %}
+	</div>
+</section>
+{% endblock %}

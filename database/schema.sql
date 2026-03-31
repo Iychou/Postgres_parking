@@ -1,0 +1,34 @@
+CREATE USER erp IDENTIFIED BY erp123;
+
+GRANT CONNECT, RESOURCE TO erp;
+
+GRANT UNLIMITED TABLESPACE TO erp;
+
+CONNECT erp/erp123;
+
+CREATE TABLE employees(
+
+id NUMBER PRIMARY KEY,
+
+name VARCHAR2(50),
+
+role VARCHAR2(50),
+
+salary NUMBER
+
+);
+
+CREATE TABLE tickets(
+
+id NUMBER PRIMARY KEY,
+
+title VARCHAR2(100),
+
+status VARCHAR2(20),
+
+employee_id NUMBER,
+
+FOREIGN KEY(employee_id)
+REFERENCES employees(id)
+
+);

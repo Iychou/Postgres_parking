@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="hero-panel mb-4 compact tickets-hero">
+	<div class="hero-copy">
+		<span class="eyebrow">Support board</span>
+		<h1>Tickets plus visibles, priorites plus claires.</h1>
+		<p>Cette vue met en avant le statut, l'assignation et le volume global de demandes.</p>
+	</div>
+	<div class="hero-badge wide danger">
+		<span>Tickets ouverts</span>
+		<strong>{{ ticket_stats.open_tickets or 0 }}</strong>
+		<small>{{ ticket_stats.unassigned_tickets or 0 }} non assignes</small>
+	</div>
+</section>
+
+<section class="stats-grid mb-4">
+	<article class="metric-card accent-red">
+		<div class="metric-icon"><i class="fas fa-layer-group"></i></div>
+		<div>
+			<p>Total tickets</p>
+			<h3>{{ ticket_stats.tickets_count or 0 }}</h3>
+			<span>Suivi global</span>
+		</div>
+	</article>
+	<article class="metric-card accent-teal">
+		<div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+		<div>
+			<p>Tickets fermes</p>
+			<h3>{{ ticket_stats.closed_tickets or 0 }}</h3>
+			<span>Resolution terminee</span>
+		</div>
+	</article>
+</section>
+
+<section class="panel-card">
+	<div class="section-heading">
+		<div>
+			<span class="eyebrow">Operations</span>
+			<h2>Liste des tickets</h2>
+		</div>
+	</div>
+	<div class="table-shell">
+		<table class="table table-modern align-middle mb-0">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Title</th>
+					<th>Status</th>
+					<th>Assigned to</th>
+					<th>Role</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for ticket in tickets %}
+				<tr>
+					<td>{{ ticket.id }}</td>
+					<td>
+						<div class="name-cell">
+							<strong>{{ ticket.title }}</strong>
+							<span>Ticket record</span>
+						</div>
+					</td>
+					<td>
+						<span class="status-pill {{ 'status-open' if ticket.status|upper == 'OPEN' else 'status-closed' }}">
+							{{ ticket.status }}
+						</span>
+					</td>
+					<td>{{ ticket.employee_name or "Non assigne" }}</td>
+					<td>{{ ticket.employee_role or "-" }}</td>
+				</tr>
+				{% else %}
+				<tr>
+					<td colspan="5" class="empty-cell">Aucun ticket a afficher.</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>
+{% endblock %}
